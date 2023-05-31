@@ -1,18 +1,21 @@
-"use strict";
-const express = require("express");
-const serverless = require("serverless-http");
-const cors = require("cors");
+import express from "express";
+import serverless from "serverless-http";
+import cors from "cors";
+import dotenv from "dotenv";
+import bcryptRoutes from "./routes/bcryptRoutes.js";
 
-require("dotenv").config();
-const BcryptGeneratorCheckerRoutes = require("./routes/bcrypt-generator-checker");
+dotenv.config();
+
 const app = express();
-
 app.use(cors());
 app.use(express.json());
-app.use("/", BcryptGeneratorCheckerRoutes.routes);
+app.use("/", bcryptRoutes);
 
-app.listen(process.env.PORT, () =>
-  console.log("App is listening on url " + process.env.HOST_URL)
-);
+const port = process.env.PORT || 3000;
+const hostUrl = process.env.HOST_URL || "http://localhost";
 
-module.exports.handler = serverless(app);
+app.listen(port, () => {
+  console.log(`App is listening on ${hostUrl}:${port}`);
+});
+
+export const handler = serverless(app);
